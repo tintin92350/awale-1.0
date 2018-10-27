@@ -135,7 +135,7 @@ int main(void)
 
             // On teste si le joueur (suivant) est en famine
             // si c'est le cas on l'indique
-            awale.famines[awale.joueur] = joueur_en_famine(awale.plateau, joueur_suivant(awale.joueur));
+            awale.famines[joueur_suivant(awale.joueur)] = joueur_en_famine(awale.plateau, joueur_suivant(awale.joueur));
 
             // On teste si le joueur a gagner
             if(awale.scores[awale.joueur] > 24)
@@ -216,11 +216,11 @@ unsigned int selection_menu()
 {
     // Affiche au joueur la demande
     printf("Que souhaitez-vous faire ?\n");
-    affichage_centre("[1] Ordinateur VS Ordinateur");
-    affichage_centre("[2] Ordinateur VS IA");
+    affichage_centre("[1] Joueur VS Joueur");
+    affichage_centre("[2] Joueur VS IA");
     affichage_centre("[3] Partie sauvgardée");
         changer_couleur_terminal(RED);
-        affichage_centre("[4] Ordinateur VS Ordinateur (LAN)");
+        affichage_centre("[4] Joueur VS Joueur (LAN)");
         reinitialiser_couleur_terminal();
     affichage_centre("[5] Voire la Hall Of Fame");
     affichage_centre("[6] Quitter");
@@ -238,7 +238,7 @@ unsigned int selection_menu()
         choix = atoi(buffer_choix_utilisateur);
         
         if(choix == ETAT_JOUER_LAN)
-                printf("Attention cette option est non fonctionelle\n");
+            printf("Attention cette option est non fonctionelle\n");
         else if(choix == ETAT_JOUER_PARTIEENR)
             {
                 if(!fichier_exist("save"))
