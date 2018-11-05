@@ -6,6 +6,7 @@
 
 // En-tête obligatoires
 #include "main.h"
+#include <ctype.h>
 
 // Fichiers du jeu
 #include "Awale.h"
@@ -28,17 +29,11 @@ unsigned int selection_menu();
 
 // Entree principale du programme
 int main(void)
-{
-    // On efface la console
-    effacer_console();
-    
+{ 
     // Initialisation des informations sur la console
     // nécessaire au bon fonctionnement des fonctions
     // d'entrée / sortie étendu
     initialise_informations_console();
-
-    // Introduction du jeu
-    //introduire_le_jeu();
 
     // Créer une partie
     AwalePartie awale;
@@ -49,6 +44,8 @@ int main(void)
     do {   
         // On efface la console
         effacer_console();
+        // Introduction du jeu
+        introduire_le_jeu();
         // Demande au joueur ce qu'il souhaite
         etat_du_jeu = selection_menu();
     }
@@ -162,50 +159,12 @@ int main(void)
  * Introduction du jeu
  */
 void introduire_le_jeu()
-{  
-    // Légendes à afficher
-    char * legendes_text[7] = {
-        "Ils ont marché longtemps, très longtemps à travers le désert...",
-        "jusqu'à ce qu'ils arrivent au bord de la mer...",
-        "Ils ont fait des provisions de coquillages..",
-        "puis sont repartis dans leur village",
-        "En chemin, ils ont fait des trous dans le sable",
-        "pour stocker les coquillages.",
-        "C'est ainsi qu'est né le jeu : des coquillages dans des trous"
-    };
-
-    // On afficher au centre chaque légende
-    for(unsigned int legende = 0;legende < 7; legende++)
-    {
-        // On affiche sa valeur au entre de la console
-        affichage_centre((char*)legendes_text[legende]);
-        
-        // Puis on attend 1s
-        #ifndef DEBUG
-        sleep(1);
-        #else
-        sleep(0);
-        #endif
-    }
-
-    // Retour à la ligne
-    printf("\n");
-
-    // On affiche 3 tirets
-    // avec une animation
-    for(unsigned int compteur = 0; compteur < 3; compteur++)
-    {
-        // On affiche le tiret
-        affichage_centre("-");
-        // Attend 1 second
-        #ifndef DEBUG
-        sleep(1);
-        #else
-        sleep(0);
-        #endif
-    }
-
-    // Retour à la ligne
+{
+    effacer_console();
+    // Affichage des informations relatives.. a nous !
+    affichage_centre("*********************************");
+    affichage_centre("** CODE PAR QUENTIN ET COLLINE **");
+    affichage_centre("*********************************");
     printf("\n");
 }
 
@@ -215,12 +174,6 @@ void introduire_le_jeu()
  */
 unsigned int selection_menu()
 {
-    // Affichage des informations relatives.. a nous !
-    affichage_centre("*********************************");
-    affichage_centre("** CODE PAR QUENTIN ET COLLINE **");
-    affichage_centre("*********************************");
-    printf("\n");
-
     // Affiche au joueur la demande
     printf("Que souhaitez-vous faire ?\n");
     affichage_centre("[1] Joueur VS Joueur");
@@ -273,7 +226,7 @@ unsigned int selection_menu()
     // Tant que le choix n'est pas standard (i.e. > 6 donc pas une fonction proposé)
     // l'état HallOfFame aussi rejour la boucle car après affichage on redemande à l'utilisateur de faire un choix
     // et enfin on vérifie si le fichier existe si on a demandé de rejouer une partie (si il n'existe pas on refais un tour !)
-    while(choix > 7 || (choix == ETAT_HALLOFFAME) || (choix==ETAT_JOUER_LAN) || (choix==ETAT_JOUER_PARTIEENR && !fichier_exist("save")));
+    while(choix > 7 || (choix == ETAT_HALLOFFAME) || (choix==ETAT_JOUER_LAN) || (choix==ETAT_JOUER_PARTIEENR && !fichier_exist("save")) || !isdigit(buffer_choix_utilisateur[0]));
 
     // On retourne le choix de l'utilisateur
     // qui sera traiter
