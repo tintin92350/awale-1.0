@@ -110,6 +110,12 @@ void ajouter_score_a_la_liste(HallOfFame * hof, unsigned int pos, unsigned int s
 void afficher_hof(HallOfFame hof)
 {
     unsigned int i;
+
+    affichage_centre("************************************");
+    affichage_centre("**          HALL OF FAME          **");
+    affichage_centre("************************************");
+    printf("\n");
+
     // On affiche chaque meilleur score
     for(i = 0; i < 10; i++)
         {
@@ -117,7 +123,7 @@ void afficher_hof(HallOfFame hof)
                 break;
 
             char texte[STRING_MAX_CHAR];
-            sprintf(texte, "%i. Le joueur %s a récupéré %d graine !", i+1, hof.noms[i], hof.scores[i]);
+            sprintf(texte, "%i. %s WINNER WITH %d SEED !", i+1, hof.noms[i], hof.scores[i]);
             affichage_centre(texte);
         }
     

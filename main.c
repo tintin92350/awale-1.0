@@ -38,38 +38,37 @@ int main(void)
     initialise_informations_console();
 
     // Introduction du jeu
-    introduire_le_jeu();
+    //introduire_le_jeu();
 
     // Créer une partie
     AwalePartie awale;
 
     // Etat du jeu
     FLAG etat_du_jeu;
+
     do {   
         // On efface la console
         effacer_console();
         // Demande au joueur ce qu'il souhaite
         etat_du_jeu = selection_menu();
     }
-    while(!demande_confirmation());
+    while(!demande_confirmation("Souhaitez-vous vraiment faire cela ?"));
 
-        switch (etat_du_jeu)
+    // Si l'utilisateur demande de rejouer une partie
+    // sauvegarder on la charge
+    if(etat_du_jeu == ETAT_JOUER_PARTIEENR)
+        awale = charger_partie();
+    // Charger un fichier
+    else if(etat_du_jeu == ETAT_JOUER_FICHIER)
         {
-            case ETAT_JOUER_PARTIEENR:
-                awale = charger_partie();
-                break;
-            case ETAT_JOUER_CVSC:
-                awale = creer_partie(ETAT_JOUER_CVSC);
-                break;
-            case ETAT_JOUER_CVSIA:
-                awale = creer_partie(ETAT_JOUER_CVSIA);
-                break;
-            case ETAT_JOUER_LAN:
-                awale = creer_partie(ETAT_JOUER_LAN);
-                break;
-            default:
-                break;
+            char buffer[STRING_MAX_CHAR];
+            printf("entrez un nom de fichier : \n");
+            scanf("%s", buffer);
+            awale = charger_partie_depuis_fichier(buffer);
         }
+    // Sinon on créer la partie
+    else
+        awale = creer_partie(etat_du_jeu);
 
     // Tant que le jeu est en cour d'execution
     // on continue de jouer :)
@@ -86,21 +85,21 @@ int main(void)
             if(joueur_est_en_famine(awale, awale.joueur))
                 {
                     fin_de_partie(awale, joueur_suivant(awale.joueur), awale.scores);
-                    etat_du_jeu = ETAT_QUITTER;
+                    break;
                 }
             // On test si l'adversaire est en famine
             // si c'est le case on test si on peut le nourrire
             // si ce n'est pas possible il a gagné
-            else if(joueur_est_en_famine(awale, joueur_suivant(awale.joueur)))
-                if(!joueur_peut_nourrire(awale.plateau, awale.joueur))
-                    {
-                        fin_de_partie(awale, awale.joueur, awale.scores);
-                        etat_du_jeu = ETAT_QUITTER;
-                    }
+            else if(joueur_est_en_famine(awale, joueur_suivant(awale.joueur)) && !joueur_peut_nourrire(awale.plateau, awale.joueur))
+                {
+                    fin_de_partie(awale, awale.joueur, awale.scores);
+                    break;
+                }
 
             // On efface l'écran
+            // uniquement en release pas en mode debug
             #ifndef DEBUG
-                    effacer_console();
+                effacer_console();
             #endif
 
             // On affiche les scores des joueurs
@@ -109,11 +108,7 @@ int main(void)
             // On affiche la plateau de facon centré
             afficher_plateau(awale.plateau);
 
-            // Demande au joueur la case qu'il souhaite jouée
-            affiche_separation_horizontal();
-            afficher_dernier_coup_joue(awale);
-            printf("Quel emplacement souhaitez-vous jouer ?\n");
-            
+            // Demande au joueur la case qu'il souhaite jouée            
             // On récupère l'emplacement demandé par le joueur
             awale.emplacement = demande_emplacement_au_joueur(&awale);
 
@@ -121,10 +116,10 @@ int main(void)
             awale.dernier_emplacement = awale.emplacement;
 
             // On jou le coup demandé puis on récupère la
-            // dernière case du coup
+            // dernière case du atteinte
             awale.emplacement = deplacer_graines(awale.plateau, awale.emplacement);
 
-            // On teste si le joueur (en cours) est en famine
+            // On teste si le joueur (en cours) est en famine (après avoir jouer)
             // si c'est le cas on l'indique
             awale.famines[awale.joueur] = joueur_en_famine(awale.plateau, awale.joueur);
 
@@ -133,7 +128,7 @@ int main(void)
             // et on récupère le score du joueur
             awale.scores[awale.joueur] = awale.scores[awale.joueur] + ramasser_graines(awale.plateau, awale.emplacement, awale.joueur);
 
-            // On teste si le joueur (suivant) est en famine
+            // On teste si le joueur (suivant) est en famine (après avoir pris les graines)
             // si c'est le cas on l'indique
             awale.famines[joueur_suivant(awale.joueur)] = joueur_en_famine(awale.plateau, joueur_suivant(awale.joueur));
 
@@ -143,6 +138,12 @@ int main(void)
                     fin_de_partie(awale, awale.joueur, awale.scores);
                     etat_du_jeu = ETAT_QUITTER;
                 }
+
+            // Si le joueur suivant est l'IA on attend
+            // un peu...
+            // sinon c'est trop rapide on voi rien...
+            if(awale.type == ETAT_JOUER_CVSIA && awale.joueur == JOUEUR_IA)
+                sleep(2);
 
             // On passe au joueur suivant
             awale.joueur = joueur_suivant(awale.joueur);
@@ -214,6 +215,12 @@ void introduire_le_jeu()
  */
 unsigned int selection_menu()
 {
+    // Affichage des informations relatives.. a nous !
+    affichage_centre("*********************************");
+    affichage_centre("** CODE PAR QUENTIN ET COLLINE **");
+    affichage_centre("*********************************");
+    printf("\n");
+
     // Affiche au joueur la demande
     printf("Que souhaitez-vous faire ?\n");
     affichage_centre("[1] Joueur VS Joueur");
@@ -229,27 +236,46 @@ unsigned int selection_menu()
     char buffer_choix_utilisateur[STRING_MAX_CHAR];
     unsigned int choix = 0;
 
+    // Une boucle pour vérifier ce que l'utilisateur
+    // rentre comme donnée
+    // certaines fonctionnalités ne sont pas encore disponible (LAN)
     do {
+        // Demande à l'utilisateur de faire son choix
+        // on attend une chaine de caractère pour ensuite pouvoir
+        // faire des teste de vérificaiton sur l'entrée
         scanf("%s", buffer_choix_utilisateur);
 
-        if(strcmp(buffer_choix_utilisateur, "") == 0)
-            continue;
-
+        // On convertit cette entrée en un nombre
         choix = atoi(buffer_choix_utilisateur);
         
+        // La fonctionnalités LAN n'étant pas disponible
+        // on informe l'utilisateur que son choix est impossible
         if(choix == ETAT_JOUER_LAN)
-            printf("Attention cette option est non fonctionelle\n");
+            {
+                printf("Attention cette option est non fonctionelle\n");
+                continue;
+            }
+        // Si l'utilisateur souhaite continuer une partie
         else if(choix == ETAT_JOUER_PARTIEENR)
             {
+                // On vérifie si une sauvegarde existe !
                 if(!fichier_exist("save"))
-                    printf("Il n'y a aucune partie enregistrée !\n");
+                    {
+                        printf("Il n'y a aucune partie enregistrée !\n");
+                        continue;
+                    }
             }
+        // Si l'utilisateur demande le Hall Of Fame
+        // on l'affiche
         else if(choix == ETAT_HALLOFFAME)
-            {
-                afficher_hof(recuperer_les_meilleurs_scores());                
-            }
+                afficher_hof(recuperer_les_meilleurs_scores());
     }
-    while(choix > 6 || (choix == ETAT_HALLOFFAME) || (choix==ETAT_JOUER_LAN) || (choix==ETAT_JOUER_PARTIEENR && !fichier_exist("save")));
+    // Tant que le choix n'est pas standard (i.e. > 6 donc pas une fonction proposé)
+    // l'état HallOfFame aussi rejour la boucle car après affichage on redemande à l'utilisateur de faire un choix
+    // et enfin on vérifie si le fichier existe si on a demandé de rejouer une partie (si il n'existe pas on refais un tour !)
+    while(choix > 7 || (choix == ETAT_HALLOFFAME) || (choix==ETAT_JOUER_LAN) || (choix==ETAT_JOUER_PARTIEENR && !fichier_exist("save")));
 
+    // On retourne le choix de l'utilisateur
+    // qui sera traiter
     return choix;
 }

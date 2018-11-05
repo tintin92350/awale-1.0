@@ -16,6 +16,6 @@
 #include <sys/wait.h>
 
 // Debug mode
-#define DEBUG 0
+//#define DEBUG 0
 
 #endif

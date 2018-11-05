@@ -16,6 +16,38 @@ AwalePartie charger_partie()
         remove("save");
     return awale;
 }
+
+/**
+ * Charger une partie pré-configurer dans un fichier text
+ * @param STRING, Chemin vers le fichier
+ * @return AwalePartie, La partie chargé
+ */
+AwalePartie charger_partie_depuis_fichier(const char * fichier)
+{
+    FILE * fichier_s = fopen(fichier, "r");
+
+    if(fichier_s == NULL)
+        return creer_partie(ETAT_JOUER_CVSC);
+
+    AwalePartie awale = creer_partie(ETAT_JOUER_CVSC);
+
+    for(unsigned int c = 0; c < 6; c++) /// Petite référence subtile...
+        fscanf(fichier_s, "%d ", &awale.plateau[JOUEUR_1][c]);
+    for(unsigned int c = 0; c < 6; c++) /// Petite référence subtile... (copié collé...)
+        fscanf(fichier_s, "%d ", &awale.plateau[JOUEUR_2][c]);
+
+    fscanf(fichier_s, "%du", &awale.scores[0]);
+    fscanf(fichier_s, "%du", &awale.scores[1]);
+    fscanf(fichier_s, "%hu", &awale.type);
+
+    printf("awale partie type is %hu\n", awale.type);
+
+    return awale;
+
+    //fscanf(fichier_s, "%d %d %d %d %d %d", awale.plateau[0][JOUEUR_1], awale.plateau[0][JOUEUR_1], awale.plateau[0][JOUEUR_1], awale.plateau[4][JOUEUR_1], awale.plateau[5][JOUEUR_1], awale.plateau[6][JOUEUR_1]);
+    
+}
+
 /**
  * Créer une nouvelle partie
  * @return AwalePartie, renvoi la partie crée

@@ -49,6 +49,10 @@ Emplacement demande_emplacement_au_joueur(AwalePartie * partie)
     // ou Ordinateur VS Ordinateur (LAN)
     if(partie->joueur != JOUEUR_IA || partie->type == ETAT_JOUER_CVSC || partie->type == ETAT_JOUER_LAN)
         {
+            affiche_separation_horizontal();
+            afficher_dernier_coup_joue(*partie);
+            printf("Quel emplacement souhaitez-vous jouer ?\n");
+
             // L'emplacement souhaité
             // en caractère
             char emplacement_demande[10];
@@ -69,19 +73,40 @@ Emplacement demande_emplacement_au_joueur(AwalePartie * partie)
         }
     else
         {
-            int emp_max_graine = 0, empx = -1;
+            // - Nombre de graine maximum prenable par l'IA
+            // - Colone de l'emplacement si graine peut etre ramasser
+            // - Emplacement à retourné
+            unsigned int emp_max_graine = 0;
+            int empx = -1;
             Emplacement emp;
+
+            // On va tester chaque case
+            // du plateau
             for(unsigned int e = 0; e < 6; e++)
                 {
+                    // On recupère l'enplacement pour un traitement
+                    // via la structure emplacement
                     emp = emplacement_defaut(e, JOUEUR_IA);
+
+                    // On recupère le nombre de graine
+                    // à cette emplacement
                     unsigned int nbr_graine = recupere_nombre_graine(partie->plateau, emplacement_defaut(e, JOUEUR_IA));
 
+                    // On vérifie si l'emplacement n'est pas vide
                     if(nbr_graine > 0)
                         {
+                            // On simule le déplacement
+                            // pour se faire pour chaque graine
+                            // on va à l'emplacement suivant
                             for(;nbr_graine > 0; nbr_graine--)
                                 emp = emplacement_suivant(emp);
-                            unsigned int nbr_graine_ramassable = nombre_de_graine_ramassable(partie->plateau, emp);
 
+                            // Ensuite on recupère le nombre de graine
+                            // que l'on pourrait ramasser
+                            unsigned int nbr_graine_ramassable = nombre_de_graine_ramassable(partie->plateau, emp, JOUEUR_IA);
+
+                            // Enfin on vérifie si c'est une quantité
+                            // plus importante que la dernière
                             if(nbr_graine_ramassable > emp_max_graine)
                                 {
                                     empx = e;
@@ -90,14 +115,21 @@ Emplacement demande_emplacement_au_joueur(AwalePartie * partie)
                         }
                 }
 
+            // Si il y a un emplacement
+            // où l'IA peut prendre des graines (un max)
+            // on retourne l'emplacement trouvé
             if(emp_max_graine > 0)
                     return emplacement_defaut(empx, JOUEUR_IA);
+
+            // Sinon on prend un emplacement
+            // au hasard. Cependant on vérifie que l'emplacement n'est pas vide
+            // si c'est le cas on recommence jusqu'a que se soit un emplacement valide
             do {
                 emp = emplacement_defaut(rand() % 6, JOUEUR_IA);
-            }
-            
+            }            
             while(emplacement_est_vide(partie->plateau, emp));
 
+            // Enfin on retourne l'emplacement
             return emp;
         }
 }
@@ -207,7 +239,7 @@ void fin_de_partie(AwalePartie partie, unsigned int joueur, unsigned int scores[
 
     // Affichage du gagnant
     char gagnant[STRING_MAX_CHAR];
-    sprintf(gagnant, "Le joueur %d", joueur);
+    sprintf(gagnant, "Le joueur %d", joueur+1);
     affichage_centre(gagnant);
 
     // On réaffiche en blanc (reset)
@@ -232,9 +264,9 @@ void fin_de_partie(AwalePartie partie, unsigned int joueur, unsigned int scores[
                     do {
                         scanf("%s", nom_joueurs);
                     }
-                    while(demande_confirmation());
+                    while(!demande_confirmation("Souhaitez-vous vraiment prendre ce nom ?"));
 
-                    ajouter_score_a_la_liste(&hof, position, scores[joueur], "NON");
+                    ajouter_score_a_la_liste(&hof, position, scores[joueur], nom_joueurs);
                 }
 
             // On met à jour le fichier
@@ -248,11 +280,11 @@ void fin_de_partie(AwalePartie partie, unsigned int joueur, unsigned int scores[
  * @param Emplacement, L'emplacement à vérifier
  * @return unsigned int, Le nombre de graine que je peu ramasser
  */
-unsigned int nombre_de_graine_ramassable(int plateau[2][6], Emplacement emp)
+unsigned int nombre_de_graine_ramassable(int plateau[2][6], Emplacement emp, unsigned int joueur)
 {
     unsigned int nbr = 0;
 
-    while(recupere_nombre_graine(plateau, emp) == 2 || recupere_nombre_graine(plateau, emp) == 3)
+    while(emplacement_est_ramassable(plateau, emp, joueur))
         {
             nbr++;
             emp = emplacement_precedent(emp);
@@ -321,6 +353,7 @@ BOOL entree_appartient_a_utilisateur(char entree, unsigned int joueur)
  * @param Plateau - 2Dimensions, Le plateau de jeu
  * @param BOOL, Le joueur suivant est-il en famine ?
  * @param AwalePartie, Partie en cours
+ * @param FLAG, Etat du jeu a retranscrire (1 -> le jeu continue | 0 -> le jeu stop)
  * @return BOOL
  */
 BOOL entree_respecte_regles(char entree, unsigned int joueur, int plateau[2][6], BOOL joueur_suivant_famine, AwalePartie * partie)
@@ -336,6 +369,12 @@ BOOL entree_respecte_regles(char entree, unsigned int joueur, int plateau[2][6],
                 }
             else if(entree == 'q')
                 {
+                    if(demande_confirmation("Souhaitez-vous sauvegarder la partie ?") && enregistrer_partie("save", partie))
+                        printf("La partie à été sauvegardée !\n");
+
+                    printf("Il n'y a pas d'allocation dynamique donc je peu faire un exit safe ;)\n");
+                    sleep(3);
+                    exit(-1);
                 }
             else
                 {

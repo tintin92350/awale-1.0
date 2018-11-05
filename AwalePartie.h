@@ -50,6 +50,13 @@ typedef struct s_AwalePartie
 AwalePartie charger_partie();
 
 /**
+ * Charger une partie pré-configurer dans un fichier text
+ * @param STRING, Chemin vers le fichier
+ * @return AwalePartie, La partie chargé
+ */
+AwalePartie charger_partie_depuis_fichier(const char *);
+
+/**
  * Créer une nouvelle partie
  * @param unsigned int, Le type de partie
  * @return AwalePartie, renvoi la partie crée

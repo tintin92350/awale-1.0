@@ -69,9 +69,10 @@ void fin_de_partie(AwalePartie partie, unsigned int joueur, unsigned int scores[
  * Récupère le nombre de graine que je peux ramasser à partie d'un emplacement
  * @param Plateau - 2Dimensions, Le plateau de jeu
  * @param Emplacement, L'emplacement à vérifier
+ * @param unsigned int, Le joueur qui a jouer
  * @return unsigned int, Le nombre de graine que je peu ramasser
  */
-unsigned int nombre_de_graine_ramassable(int plateau[2][6], Emplacement);
+unsigned int nombre_de_graine_ramassable(int plateau[2][6], Emplacement, unsigned int);
 
 /*******************************************************************************
  * FONCTIONS DE CONVERSION

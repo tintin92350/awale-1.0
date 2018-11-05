@@ -58,9 +58,10 @@ void reinitialiser_couleur_terminal();
 
 /**
  * Demande de certitude
+ * @param STRING, Phrase intterogative à afficher
  * @return BOOL
  */
-BOOL demande_confirmation();
+BOOL demande_confirmation(const char *);
 
 
 /*******************************************************************************
@@ -71,7 +72,7 @@ BOOL demande_confirmation();
  * Enregistre la partie dans un fichier
  * @param string, Nom du fichier
  * @param AwalePartie, Partie à enregistrer
- * @return BOOL, La fonction a t-elle bien enregistrer la partie
+ * @return BOOL, La fonction a t-elle bien enregistrée la partie
  */
 BOOL enregistrer_partie(string name, AwalePartie * partie);
 
@@ -79,7 +80,7 @@ BOOL enregistrer_partie(string name, AwalePartie * partie);
  * Récupère la partie à partie d'un fichier
  * @param string, Nom du fichier
  * @param AwalePartie, Partie à enregistrer
- * @return BOOL, La fonction a t-elle bien enregistrer la partie
+ * @return BOOL, La fonction a t-elle bien récupérée la partie
  */
 BOOL recuperer_partie(string name, AwalePartie * partie);
 
