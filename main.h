@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <time.h>
 
 // Bibliothèque UNIX
 #include <sys/ioctl.h>

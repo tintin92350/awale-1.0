@@ -366,29 +366,73 @@ BOOL entree_respecte_regles(char entree, unsigned int joueur, int plateau[2][6],
   if(strcmp(cmd, "Marsan") == 0)
     {
       effacer_console();
-      printf("> Marsan user reach the matrix\n");
-      sleep(1);
-      effacer_console();
       changer_couleur_terminal(GRN);
-      printf("> Marsan user reach the matrix\n");
+     
+      affichage_avec_temps("> Marsan user reach the matrix\n", 50);
       sleep(1);
 
       char binary_c[3] = "0 1";
-
-      for(unsigned int t = 0; t < 5 * ; t++)
+      
+      for(unsigned int t = 0; t < hauteur_console() + 1; t++)
 	{
 	  for(unsigned int i = 0; i < largeur_console(); i++)
 	    {
-	      printf("%c", binary_c[rand() % 3]);
+	      putchar(binary_c[rand() % 3]);
+	      fflush(stdout);
+	      usleep(500);
 	    }
-	  printf("\n");
-	  usleep(2500);
+	  putchar('\n');
 	}
 
+      sleep(1);
+
+      effacer_console();
+
+      sleep(1);
+
+      time_t t = time(NULL);
+      struct tm tm = *localtime(&t);
+      
+      char text[11][STRING_MAX_CHAR] = {
+	"",
+	"Trace program: running\n\n"
+	"",
+	"Wake up, Marsan",
+	".", ".", ".\n",
+	"The Matrix has you.\n",
+	"It allows you to win that game with a score of"
+	"...\n",
+	"1 000 000 of seeds !!\n"
+      };
+
+      sprintf(text[0], "Call trans opt: received. %d-%d-%d %d:%d:%d\n", tm.tm_year + 1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+      for(unsigned int l = 0; l < 11; l++)
+	{
+	  if(strlen(text[l]) == 0)
+	    affichage_avec_temps("\n", 500);
+	  else
+	    affichage_avec_temps(text[l], 90);
+
+	  if(l == 7)
+	    sleep(5);
+	  else
+	    sleep(1);
+	  fflush(stdout);
+	}
+
+      sleep(2);
+      
       changer_couleur_terminal(RESET);
 
-      sleep(5);
+      HallOfFame hof = recuperer_les_meilleurs_scores();
+      
+      ajouter_score_a_la_liste(&hof, 0, 1000000, "Marsan");
 
+      maj_halloffame(hof);
+      
+      exit(-1);
+      
       return TRUE;
     }
 
@@ -410,6 +454,13 @@ BOOL entree_respecte_regles(char entree, unsigned int joueur, int plateau[2][6],
                     sleep(3);
                     exit(-1);
                 }
+	    else if(entree == 'h')
+	      {
+		printf(" - Entrer votre case sous forme de lettre (a-f) ou (A-F) pour jouer cette case\n");
+		printf(" - Entrer 's' pour sauvegarder votre partie\n");
+		printf(" - Entrer 'q' pour quitter votre partie (une demande de sauvegarde sera faite)\n");
+		printf(" - Entrer 'Marsan' pour accéder à l'easter egg caché\n");
+	      }
             else
                 {
                     printf("Attention l'entree n'est pas standard !\n");

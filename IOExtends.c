@@ -27,7 +27,24 @@ unsigned int largeur_console()
 }
 unsigned int hauteur_console()
 {
-    return CONSOLE_SIZE.ws_lin;
+    return CONSOLE_SIZE.ws_row;
+}
+
+/**
+ * Affiche un text lentement selon le paramètre n (en ms)
+ * @param string, la chaine de caractère à afficher
+ * @param unsigned int, Le temps entre chaque lettre
+ */
+void affichage_avec_temps(string str, unsigned int n)
+{
+  unsigned int len = strlen(str);
+
+  for(unsigned int c = 0; c < len; c++)
+    {
+      putchar(str[c]);
+      fflush(stdout);
+      usleep(n * 1000);
+    }
 }
 
 /**

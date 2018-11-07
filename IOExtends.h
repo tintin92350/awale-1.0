@@ -24,6 +24,13 @@ unsigned int largeur_console();
 unsigned int hauteur_console();
 
 /**
+ * Affiche un text lentement selon le paramètre n (en ms)
+ * @param string, la chaine de caractère à afficher
+ * @param unsigned int, Le temps entre chaque lettre
+ */
+void affichage_avec_temps(string, unsigned int);
+
+/**
  * Affiche un text brut de facon centré sur la console
  * @param string, la chaine de caractère à afficher
  */
