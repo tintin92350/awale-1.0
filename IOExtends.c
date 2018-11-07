@@ -11,14 +11,14 @@ static struct winsize CONSOLE_SIZE;
  */
 void initialise_informations_console()
 {
-    // Fonction permettant la récuperation
+    // Fonction qui permet la récuperation
     // des informations sur la taille
     // de la console
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &CONSOLE_SIZE);
 }
 
 /**
- *  Donne la lergeur de la console
+ *  Donne la largeur de la console
  * @return unsigned int, la largeur de la console
  */
 unsigned int largeur_console()

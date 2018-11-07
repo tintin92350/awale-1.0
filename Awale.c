@@ -9,6 +9,8 @@
 #include "Plateau.h"
 #include "HallOfFame.h"
 
+#include "main.h"
+
 /*******************************************************************************
  * FONCTIONS D'AFFICHAGE DES INFORMATIONS
  ******************************************************************************/
@@ -405,7 +407,7 @@ BOOL entree_respecte_regles(char entree, unsigned int joueur, int plateau[2][6],
     {
         Emplacement emp = emplacement_defaut(entree_id, joueur);
         // 4.0 La case demandé doit nourrire l'adversaire
-        if(joueur_peut_jouer_cette_case_famine(plateau, joueur, emp))
+        if(!joueur_peut_jouer_cette_case_famine(plateau, joueur, emp))
             {
                 printf("Attention cet emplacement ne peut nourrire l'adversaire !\n");
                 return FALSE; 
@@ -451,9 +453,9 @@ BOOL joueur_peut_nourrire(int plateau[2][6], unsigned int joueur)
 {
     if(joueur == JOUEUR_1)
     {
-        for(unsigned int i = 0; i < 6; i++)
-            if(i - plateau[joueur][i] < 0)
-                return TRUE;
+        for(int i = 0; i < 6; i++)
+            if((i - plateau[joueur][i] < 0))
+        	 	return TRUE;
     }
     else if(joueur == JOUEUR_2)
     {
@@ -473,6 +475,7 @@ BOOL joueur_peut_nourrire(int plateau[2][6], unsigned int joueur)
  */
 BOOL joueur_peut_jouer_cette_case_famine(int plateau[2][6], unsigned int joueur, Emplacement emp)
 {
+	printf("emp - graine : %d\n", emp.x - plateau[joueur][emp.x]);
     if(joueur == JOUEUR_1 && emp.x - plateau[joueur][emp.x] < 0)
             return TRUE;
     else if(joueur == JOUEUR_2 && emp.x + plateau[joueur][emp.x] > 5)

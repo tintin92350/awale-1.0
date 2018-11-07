@@ -21,7 +21,7 @@
 // Maximum constantes
 #define STRING_MAX_CHAR 250
 
-// Couleurs du terminale disponibles
+// Couleurs du terminal disponibles
 #define RED   "\x1B[31m"
 #define GRN   "\x1B[32m"
 #define YEL   "\x1B[33m"

@@ -19,7 +19,7 @@
 void plateau_defaut(int plateau[2][6]);
 
 /**
- * Fonction qui dessiner dans la console un plateau
+ * Fonction qui dessine dans la console un plateau
  * @param Plateau - 2Dimensions, Le plateau à dessiner
  */
 void afficher_plateau(int plateau[2][6]);
@@ -27,7 +27,7 @@ void afficher_plateau(int plateau[2][6]);
 /**
  * Fonction qui renvoie le nombre de graine dans une case (valide)
  * @param Plateau - 2Dimensions, Le plateau où récupèrer les informations
- * @param Emplacement, Emplacement où chercher
+ * @param Emplacement, Emplacement où chercher les graines
  * @return int, Le nombre de graine (-1 si l'emplacement est non-valide)
  */
 int recupere_nombre_graine(int plateau[2][6], Emplacement emp);
@@ -46,7 +46,7 @@ BOOL ajouter_graine(int plateau[2][6], Emplacement emp, unsigned int n);
  * Fonction qui enlève une graine à un emplacement
  * @param Plateau - 2Dimensions, Le plateau où insérer les informations
  * @param Emplacement, Emplacement où prendre
- * @param unsigned int, Nombre de graine a enlever
+ * @param unsigned int, Nombre de graine à enlever
  * @return BOOL, Renvoie faux si la fonction échoue sinon vraie
  */
 BOOL enlever_graine(int plateau[2][6], Emplacement emp, unsigned int n);

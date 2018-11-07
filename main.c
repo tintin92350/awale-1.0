@@ -1,7 +1,7 @@
 //
 // Main.c
 // Fichier principale du programme
-// concentrent les diffèrenes fonctins et contenue
+// concentrent les différentes fonctions et contenue
 // du jeu pour son fonctionnement logique
 
 // En-tête obligatoires
@@ -28,14 +28,14 @@ void introduire_le_jeu();
 unsigned int selection_menu();
 
 // Entree principale du programme
-int main(void)
+int main()
 { 
     // Initialisation des informations sur la console
     // nécessaire au bon fonctionnement des fonctions
     // d'entrée / sortie étendu
     initialise_informations_console();
 
-    // Créer une partie
+    // Structure de partie du jeu
     AwalePartie awale;
 
     // Etat du jeu
@@ -87,10 +87,11 @@ int main(void)
             // On test si l'adversaire est en famine
             // si c'est le case on test si on peut le nourrire
             // si ce n'est pas possible il a gagné
-            else if(joueur_est_en_famine(awale, joueur_suivant(awale.joueur)) && !joueur_peut_nourrire(awale.plateau, awale.joueur))
+            else if(joueur_est_en_famine(awale, joueur_suivant(awale.joueur)) &&
+					!joueur_peut_nourrire(awale.plateau, awale.joueur))
                 {
-                    fin_de_partie(awale, awale.joueur, awale.scores);
-                    break;
+					fin_de_partie(awale, awale.joueur, awale.scores);
+					break;
                 }
 
             // On efface l'écran
@@ -119,6 +120,10 @@ int main(void)
             // On teste si le joueur (en cours) est en famine (après avoir jouer)
             // si c'est le cas on l'indique
             awale.famines[awale.joueur] = joueur_en_famine(awale.plateau, awale.joueur);
+#ifdef DEBUG
+printf("Le joueur %d est en famine : %d\n", awale.joueur, awale.famines[awale.joueur]);
+#endif
+
 
             // On vérifie si on peut ramasser
             // si c'est le cas on ramasse ainsi de suite
@@ -178,11 +183,11 @@ unsigned int selection_menu()
     printf("Que souhaitez-vous faire ?\n");
     affichage_centre("[1] Joueur VS Joueur");
     affichage_centre("[2] Joueur VS IA");
-    affichage_centre("[3] Partie sauvgardée");
+    affichage_centre("[3] Partie sauveardée");
         changer_couleur_terminal(RED);
         affichage_centre("[4] Joueur VS Joueur (LAN)");
         reinitialiser_couleur_terminal();
-    affichage_centre("[5] Voire la Hall Of Fame");
+    affichage_centre("[5] Hall Of Fame");
     affichage_centre("[6] Quitter");
 
     // String buffer
