@@ -114,7 +114,7 @@ BOOL entree_appartient_a_utilisateur(char entree, unsigned int joueur);
  * @param AwalePartie, Partie en cours
  * @return BOOL
  */
-BOOL entree_respecte_regles(char entree, unsigned int joueur, int plateau[2][6], BOOL joueur_suivant_famine, AwalePartie * awale);
+BOOL entree_respecte_regles(char entree, unsigned int joueur, int plateau[2][6], BOOL joueur_suivant_famine, AwalePartie * awale, const char cmd[10]);
 
 /**
  * Vérifie si l'emplacement est propice à un ramassage

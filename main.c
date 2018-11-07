@@ -58,10 +58,10 @@ int main()
     // Charger un fichier
     else if(etat_du_jeu == ETAT_JOUER_FICHIER)
         {
-            char buffer[STRING_MAX_CHAR];
-            printf("entrez un nom de fichier : \n");
-            scanf("%s", buffer);
-            awale = charger_partie_depuis_fichier(buffer);
+	  char buffer[STRING_MAX_CHAR];
+	  printf("entrez un nom de fichier : \n");
+	  scanf("%s", buffer);
+	  awale = charger_partie_depuis_fichier(buffer);
         }
     // Sinon on créer la partie
     else
@@ -143,7 +143,7 @@ printf("Le joueur %d est en famine : %d\n", awale.joueur, awale.famines[awale.jo
 
             // Si le joueur suivant est l'IA on attend
             // un peu...
-            // sinon c'est trop rapide on voi rien...
+            // sinon c'est trop rapide on voit rien...
             if(awale.type == ETAT_JOUER_CVSIA && awale.joueur == JOUEUR_IA)
                 sleep(2);
 
@@ -167,9 +167,9 @@ void introduire_le_jeu()
 {
     effacer_console();
     // Affichage des informations relatives.. a nous !
-    affichage_centre("*********************************");
-    affichage_centre("** CODE PAR QUENTIN ET COLLINE **");
-    affichage_centre("*********************************");
+    affichage_centre("*************************************************");
+    affichage_centre("** CODE PAR LES MEILLEURS : QUENTIN ET COLLINE **");
+    affichage_centre("*************************************************");
     printf("\n");
 }
 
@@ -188,7 +188,10 @@ unsigned int selection_menu()
         affichage_centre("[4] Joueur VS Joueur (LAN)");
         reinitialiser_couleur_terminal();
     affichage_centre("[5] Hall Of Fame");
-    affichage_centre("[6] Quitter");
+        changer_couleur_terminal(YEL);
+        affichage_centre("[6] Ouvrir une partie préconfigurée");
+        reinitialiser_couleur_terminal();
+    affichage_centre("[7] Quitter");
 
     // String buffer
     char buffer_choix_utilisateur[STRING_MAX_CHAR];

@@ -21,6 +21,7 @@ void initialise_informations_console();
  * @return unsigned int, la largeur de la console
  */
 unsigned int largeur_console();
+unsigned int hauteur_console();
 
 /**
  * Affiche un text brut de facon centré sur la console

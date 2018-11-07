@@ -25,6 +25,10 @@ unsigned int largeur_console()
 {
     return CONSOLE_SIZE.ws_col;
 }
+unsigned int hauteur_console()
+{
+    return CONSOLE_SIZE.ws_lin;
+}
 
 /**
  * Affiche un text brut de facon centré sur la console

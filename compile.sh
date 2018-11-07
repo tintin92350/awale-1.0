@@ -7,7 +7,7 @@ fichiers="main.c Emplacement.c IOExtends.c Plateau.c Awale.c AwalePartie.c HallO
 exec="Awale"
 
 # Options
-opts="-Wall -g -std=c99"
+opts="-Wall -g -std=c99 -D _BSD_SOURCE"
 
 # Compile le programme
 gcc $fichiers -o $exec $opts

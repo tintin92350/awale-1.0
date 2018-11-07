@@ -65,7 +65,7 @@ Emplacement demande_emplacement_au_joueur(AwalePartie * partie)
                 printf("%sJoueur %d%s$ ", partie->joueur == 0 ? RED : GRN, partie->joueur + 1, RESET);
                 scanf(" %s", emplacement_demande);
             }
-            while(!entree_respecte_regles(emplacement_demande[0], partie->joueur, partie->plateau, partie->famines[joueur_suivant(partie->joueur)], partie));
+            while(!entree_respecte_regles(emplacement_demande[0], partie->joueur, partie->plateau, partie->famines[joueur_suivant(partie->joueur)], partie, emplacement_demande));
 
             // On convertit la coordonnée x de l'emplacement demandé
             int cx = conversion_char_vers_coordonnee_x(emplacement_demande[0]);
@@ -356,10 +356,42 @@ BOOL entree_appartient_a_utilisateur(char entree, unsigned int joueur)
  * @param BOOL, Le joueur suivant est-il en famine ?
  * @param AwalePartie, Partie en cours
  * @param FLAG, Etat du jeu a retranscrire (1 -> le jeu continue | 0 -> le jeu stop)
+ * @param STRING, La commande au complet pour vérifié le easter egg
  * @return BOOL
  */
-BOOL entree_respecte_regles(char entree, unsigned int joueur, int plateau[2][6], BOOL joueur_suivant_famine, AwalePartie * partie)
+BOOL entree_respecte_regles(char entree, unsigned int joueur, int plateau[2][6], BOOL joueur_suivant_famine, AwalePartie * partie, const char cmd[10])
 {
+  // Easter egg
+  // 'Marsan'
+  if(strcmp(cmd, "Marsan") == 0)
+    {
+      effacer_console();
+      printf("> Marsan user reach the matrix\n");
+      sleep(1);
+      effacer_console();
+      changer_couleur_terminal(GRN);
+      printf("> Marsan user reach the matrix\n");
+      sleep(1);
+
+      char binary_c[3] = "0 1";
+
+      for(unsigned int t = 0; t < 5 * ; t++)
+	{
+	  for(unsigned int i = 0; i < largeur_console(); i++)
+	    {
+	      printf("%c", binary_c[rand() % 3]);
+	    }
+	  printf("\n");
+	  usleep(2500);
+	}
+
+      changer_couleur_terminal(RESET);
+
+      sleep(5);
+
+      return TRUE;
+    }
+
     // 1. L'entrée doit être conforme, c'est-à-dire comprise entre "a" et "f"
     // et "A" et "F"
     if(!entree_utilisateur_est_standard(entree))
