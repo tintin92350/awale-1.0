@@ -15,8 +15,8 @@
 #define ETAT_JOUER_PARTIEENR 3
 #define ETAT_JOUER_LAN 4
 #define ETAT_HALLOFFAME 5
-#define ETAT_QUITTER 7
 #define ETAT_JOUER_FICHIER 6
+#define ETAT_QUITTER 7
 
 // Maximum constantes
 #define STRING_MAX_CHAR 250

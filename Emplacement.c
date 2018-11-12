@@ -21,29 +21,18 @@ Emplacement emplacement_defaut(int x, int y)
  */
 Emplacement emplacement_suivant(Emplacement emp_actuel)
 {
-    // Ajoute ou diminue la coordonnée en X de l'emplacement actuelle
-    // possibilité d'un dépassement prévut pour (c'est à dire x < 0 et x > 5)
-    emp_actuel.x += direction(emp_actuel);
-
-    // Si on dépasse du plateau par la gauche
-    // Alors on passe au joueur suivant
-    // et on remet à 0 la coordoonée x
-    if(emp_actuel.x < 0)
-    {
-        emp_actuel.y = 1;
-        emp_actuel.x = 0;
-    }
-    // Sinon si on dépasse du plateau par la droite
-    // Alors on passe au joueur suivant
-    // et on remet à 5 la coordonnée x
-    else if(emp_actuel.x > 5)
-    {
-        emp_actuel.y = 0;
-        emp_actuel.x = 5;
-    }
-
-    // Retourne le nouvel emplacement
-    return emp_actuel;
+  // On vérifie les extrémités
+  if(emp_actuel.x == 0 && emp_actuel.y == 0)
+    return emplacement_defaut(0, 1);
+  else if(emp_actuel.x == 5 && emp_actuel.y == 1)
+    return emplacement_defaut(5, 0);
+  
+  // Ajoute ou diminue la coordonnée en X de l'emplacement actuelle
+  // possibilité d'un dépassement prévut pour (c'est à dire x < 0 et x > 5)
+  emp_actuel.x += direction(emp_actuel);
+  
+  // Retourne le nouvel emplacement
+  return emp_actuel;
 }
 
 /**
@@ -53,30 +42,17 @@ Emplacement emplacement_suivant(Emplacement emp_actuel)
  */
 Emplacement emplacement_precedent(Emplacement emp_actuel)
 {
-    // Ajoute ou diminue la coordonnée en X de l'emplacement actuelle
-    // possibilité d'un dépassement prévut pour (c'est à dire x < 0 et x > 5)
-    emp_actuel.x += -1 * direction(emp_actuel);
-
-    // Si on dépasse du plateau par la gauche
-    // Alors on passe au joueur suivant
-    // et on remet à 0 la coordoonée x
-    if(emp_actuel.x < 0)
-    {
-        emp_actuel.y = 0;
-        emp_actuel.x = 0;
-    }
-    // Sinon si on dépasse du plateau par la droite
-    // Alors on passe au joueur suivant
-    // et on remet à 5 la coordonnée x
-    else if(emp_actuel.x > 5)
-    {
-        emp_actuel.y = 1;
-        emp_actuel.x = 5;
-    }
-
-    // Retourne le nouvel emplacement
-    return emp_actuel;
-
+  // On vérifie les extrémités
+  if(emp_actuel.x == 5 && emp_actuel.y == 0)
+    return emplacement_defaut(5, 1);
+  else if(emp_actuel.x == 0 && emp_actuel.y == 1)
+    return emplacement_defaut(0, 0);
+  
+  // Ajoute ou diminue la coordonnée en X de l'emplacement actuelle
+  // possibilité d'un dépassement prévut pour (c'est à dire x < 0 et x > 5)
+  emp_actuel.x += -1 * direction(emp_actuel);
+  
+  return emp_actuel;
 }
 
 /**
