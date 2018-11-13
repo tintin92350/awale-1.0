@@ -84,6 +84,7 @@ int main()
                     fin_de_partie(awale, joueur_suivant(awale.joueur), awale.scores);
                     break;
                 }
+                
             // On test si l'adversaire est en famine
             // si c'est le case on test si on peut le nourrire
             // si ce n'est pas possible il a gagné
